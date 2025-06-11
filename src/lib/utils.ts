@@ -67,6 +67,7 @@ function generateDailyChallenge(seed: number): string {
   const colors = ["verde", "roșu", "galben", "portocaliu", "mov"];
   const nutsOrSeeds = ["migdale", "semințe de floarea-soarelui", "semințe de dovleac", "nuci"];
   const wholeGrainBreads = ["pâine integrală", "pâine cu secară", "pâine cu semințe"];
+  const ingredients = [...fruits, ...vegetables, ...leafyGreens, ...proteinSources]
 
   // Alege un șablon
   const template = pickRandom(challengeTemplates, seed);
@@ -88,6 +89,7 @@ function generateDailyChallenge(seed: number): string {
   challenge = challenge.replace(/\{color\}/g, pickRandom(colors, seed + 13));
   challenge = challenge.replace(/\{nuts_or_seeds\}/g, pickRandom(nutsOrSeeds, seed + 14));
   challenge = challenge.replace(/\{whole_grain_bread\}/g, pickRandom(wholeGrainBreads, seed + 15));
+  challenge = challenge.replace(/\{ingredient\}/g, pickRandom(ingredients, seed + 16));
 
   return challenge;
 }
