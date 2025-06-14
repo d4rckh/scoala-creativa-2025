@@ -35,7 +35,7 @@ export default async (req: Request, context: Context) => {
       body: JSON.stringify({
         prompt,
         n: 1,
-        size: "100x100",
+        size: "256x256",
         response_format: "url",
       }),
     });
