@@ -6,7 +6,6 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 function generateDailyChallenge(seed: number): string {
-  // Folosim un generator pseudo-random determinist pentru seed
   function seededRandom(seed: number): number {
     const x = Math.sin(seed) * 10000;
     return x - Math.floor(x);
@@ -17,7 +16,6 @@ function generateDailyChallenge(seed: number): string {
     return arr[index];
   }
 
-  // Lista de șabloane de provocări
   const challengeTemplates: string[] = [
     "Mănâncă un {fruit} astăzi.",
     "Gătește ceva care conține {ingredient}.",
@@ -41,7 +39,7 @@ function generateDailyChallenge(seed: number): string {
     "Încearcă o rețetă vegană cu {vegetable} ca ingredient principal.",
     "Bea un ceai de plante și relaxează-te 10 minute.",
     "Evită alimentele procesate azi.",
-    "Mănâncă doar alimente de culoare {color} azi (provocare cromatică).",
+    "Mănâncă doar alimente de culoare {color} azi.",
     "Pregătește o tartă, plăcintă sau desert sănătos folosind {fruit}.",
     "Gătește cu un ingredient local cumpărat de la piață.",
     "Pregătește o gustare sănătoasă cu {nuts_or_seeds}.",
@@ -51,7 +49,6 @@ function generateDailyChallenge(seed: number): string {
     "Gătește ceva care conține minimum 5 culori diferite."
   ];
 
-  // Liste de parametri
   const fruits = ["măr", "banană", "portocală", "kiwi", "căpșună", "ananas", "prună"];
   const vegetables = ["morcov", "broccoli", "ardei", "dovlecel", "spanac", "conopidă"];
   const leafyGreens = ["salată verde", "baby spanac", "rucola", "varză kale"];
@@ -69,10 +66,8 @@ function generateDailyChallenge(seed: number): string {
   const wholeGrainBreads = ["pâine integrală", "pâine cu secară", "pâine cu semințe"];
   const ingredients = [...fruits, ...vegetables, ...leafyGreens, ...proteinSources]
 
-  // Alege un șablon
   const template = pickRandom(challengeTemplates, seed);
 
-  // Înlocuiește parametrii
   let challenge = template;
   challenge = challenge.replace(/\{fruit\}/g, pickRandom(fruits, seed + 1));
   challenge = challenge.replace(/\{vegetable\}/g, pickRandom(vegetables, seed + 2));
@@ -94,10 +89,16 @@ function generateDailyChallenge(seed: number): string {
   return challenge;
 }
 
+type RankInfo = {
+  rank: string;
+  nextLevelName: string | null;
+  nextLevelXP: number | null;
+  progressPercent: number;
+};
 
 export function todayChallenge(offsetDay: number = 0) {
   const today = new Date();
-  
+
   today.setDate(today.getDate() + offsetDay);
 
   const seed = parseInt(
@@ -105,4 +106,39 @@ export function todayChallenge(offsetDay: number = 0) {
   );
 
   return generateDailyChallenge(seed);
+}
+
+export function getUserRankInfo(currentXP: number): RankInfo {
+  const ranks = [
+    { name: "începător", xp: 0 },
+    { name: "intermediar", xp: 500 },
+    { name: "avansat", xp: 1500 },
+    { name: "expert", xp: 3000 },
+    { name: "guru al sănătății", xp: 5000 },
+  ];
+
+  let currentRank = ranks[0];
+  let nextRank = null;
+
+  for (let i = 0; i < ranks.length; i++) {
+    if (currentXP >= ranks[i].xp) {
+      currentRank = ranks[i];
+      nextRank = ranks[i + 1] ?? null;
+    } else {
+      break;
+    }
+  }
+
+  const nextLevelXP = nextRank ? nextRank.xp - currentXP : null;
+  const totalToNext = nextRank ? nextRank.xp - currentRank.xp : 0;
+  const progress = nextRank
+    ? ((currentXP - currentRank.xp) / totalToNext) * 100
+    : 100;
+
+  return {
+    rank: currentRank.name,
+    nextLevelName: nextRank ? nextRank.name : null,
+    nextLevelXP,
+    progressPercent: Math.round(progress),
+  };
 }
