@@ -6,7 +6,7 @@ import { Button } from './components/ui/button'
 import { useAtom } from 'jotai'
 import { currentXpAtom, lastDayDidAtom } from './lib/atoms'
 import { Progress } from './components/ui/progress'
-import { ArrowLeft, ArrowRight } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Calendar } from 'lucide-react'
 
 function App() {
   const [offset, setOffset] = useState(0);
@@ -37,7 +37,7 @@ function App() {
           <CardHeader>
             <CardTitle className="text-3xl">Provocarea de {offset == 0 && "azi"}{offset == -1 && "ieri"}{offset < -1 && "acum " + (-offset) + " zile"} {offset == 0 ? "este" : "era"}: </CardTitle>
           </CardHeader>
-          <CardContent className="min-h-[120px] flex flex-col justify-center">
+          <CardContent className="min-h-[140px] mb-3 flex flex-col justify-center">
             <p className="mb-5 font-black text-xl">{todayChallenge(offset)}</p>
             {
               offset == 0 && <>
@@ -68,7 +68,7 @@ function App() {
                   onClick={() => setOffset(0)}
                   className="flex items-center gap-2"
                 >
-                  🕒 Azi
+                  <Calendar /> Provocarea de azi
                 </Button>
               </div>
             )}
