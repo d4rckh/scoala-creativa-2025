@@ -23,7 +23,6 @@ export default async (req: Request, context: Context) => {
     });
   }
 
-  // 🧠 Generate Romanian image prompt
   const prompt = `Creează o imagine ilustrativă pentru următoarea provocare legată de alimentație și nutriție: "${challengeText}"`;
 
   try {
@@ -36,7 +35,7 @@ export default async (req: Request, context: Context) => {
       body: JSON.stringify({
         prompt,
         n: 1,
-        size: "512x512",
+        size: "100x100",
         response_format: "url",
       }),
     });
@@ -53,7 +52,6 @@ export default async (req: Request, context: Context) => {
       status: 200,
       headers: {
         "Content-Type": "application/json",
-        // ✅ Indefinite caching + durable
         "Netlify-CDN-Cache-Control": "public, s-maxage=31536000, stale-while-revalidate=31536000, durable",
         "Netlify-Vary": "query",
       },
